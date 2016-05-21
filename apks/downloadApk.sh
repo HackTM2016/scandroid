@@ -29,25 +29,25 @@ function download() {
     echo -e "Downloading..."
     local ua="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.104 Safari/537.36"
     local url=`printf ${APK_DL_URL} ${PACKAGE_NAME}`
-    curl "$url" -o "$PACKAGE_NAME.apk.details" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
+    curl "$url" -o "apks/$PACKAGE_NAME.apk.details" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
         -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
         -H "Connection: keep-alive" -H "Accept-Encoding: gzip,deflate,sdch" \
         -H "Accept-Language: en-US,en;q=0.8,ta;q=0.6" \
         -H "User-Agent: $ua"
 
-        local apk_url=`grep -o apk-dl.com/files/[a-zA-Z0-9.-/]* $PACKAGE_NAME.apk.details | tail -n 1`
+        local apk_url=`grep -o apk-dl.com/files/[a-zA-Z0-9.-/]* apks/$PACKAGE_NAME.apk.details | tail -n 1`
 	echo $apk_url
 
-    curl "http://$apk_url" -o "$PACKAGE_NAME.apk.details2" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
+    curl "http://$apk_url" -o "apks/$PACKAGE_NAME.apk.details2" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
         -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
         -H "Connection: keep-alive" -H "Accept-Encoding: gzip,deflate,sdch" \
         -H "Accept-Language: en-US,en;q=0.8,ta;q=0.6" \
         -H "User-Agent: $ua"
 
-	local final_apk_url=`grep -o http://dl[a-zA-Z0-9\ -_]*apk? $PACKAGE_NAME.apk.details2 | tail -1`
+	local final_apk_url=`grep -o http://dl[a-zA-Z0-9\ -_]*apk? apks/$PACKAGE_NAME.apk.details2 | tail -1`
 	echo $final_apk_url
 
-    curl "$final_apk_url" -o "$PACKAGE_NAME.apk" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
+    curl "$final_apk_url" -o "apks/$PACKAGE_NAME.apk" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
         -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
         -H "Connection: keep-alive" -H "Accept-Encoding: gzip,deflate,sdch" \
         -H "Accept-Language: en-US,en;q=0.8,ta;q=0.6" \
