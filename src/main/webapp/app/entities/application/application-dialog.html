@@ -1,0 +1,118 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myApplicationLabel">Create or edit a Application</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.application.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.application.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_name">Name</label>
+            <input type="text" class="form-control" name="name" id="field_name"
+                    ng-model="vm.application.name"
+                    required />
+            <div ng-show="editForm.name.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.name.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_description">Description</label>
+            <input type="text" class="form-control" name="description" id="field_description"
+                    ng-model="vm.application.description"
+                    required />
+            <div ng-show="editForm.description.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.description.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_packageName">Package Name</label>
+            <input type="text" class="form-control" name="packageName" id="field_packageName"
+                    ng-model="vm.application.packageName"
+                    required />
+            <div ng-show="editForm.packageName.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.packageName.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_url">Url</label>
+            <input type="text" class="form-control" name="url" id="field_url"
+                    ng-model="vm.application.url"
+                     />
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setIcon($file, vm.application)" ngf-pattern="'image/*'">
+            <label class="control-label" for="field_icon">Icon</label>
+            <div>
+                <img data-ng-src="{{'data:' + vm.application.iconContentType + ';base64,' + vm.application.icon}}" style="max-height: 100px;" ng-if="vm.application.icon"/>
+                <div ng-if="vm.application.icon" class="help-block clearfix">
+                    <span class="pull-left">{{vm.application.iconContentType}}, {{vm.byteSize(vm.application.icon)}}</span>
+                    <button ng-click="vm.application.icon=null;vm.application.iconContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="file" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setIcon($file, vm.application)" accept="image/*">
+                    Add image
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="icon" id="field_icon"
+                    ng-model="vm.application.icon"
+                     />
+            <input type="hidden" class="form-control" name="iconContentType" id="field_iconContentType"
+                    ng-model="vm.application.iconContentType" />
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setApk($file, vm.application)">
+            <label class="control-label" for="field_apk">Apk</label>
+            <div>
+                <div ng-if="vm.application.apk" class="help-block clearfix">
+                    <a class="pull-left" ng-click="vm.openFile(vm.application.apkContentType, vm.application.apk)">open</a><br>
+                    <span class="pull-left">{{vm.application.apkContentType}}, {{vm.byteSize(vm.application.apk)}}</span>
+                    <button ng-click="vm.application.apk=null;vm.application.apkContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="file" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setApk($file, vm.application)">
+                    Add blob
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="apk" id="field_apk"
+                    ng-model="vm.application.apk"
+                     />
+            <input type="hidden" class="form-control" name="apkContentType" id="field_apkContentType"
+                    ng-model="vm.application.apkContentType" />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_version">Version</label>
+            <input type="text" class="form-control" name="version" id="field_version"
+                    ng-model="vm.application.version"
+                     />
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

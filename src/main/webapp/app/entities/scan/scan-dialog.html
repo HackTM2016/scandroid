@@ -1,0 +1,48 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myScanLabel">Create or edit a Scan</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.scan.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.scan.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_updated">Updated</label>
+                <div class="input-group">
+                    <input id="field_updated" type="text" class="form-control" name="updated" uib-datepicker-popup="{{dateformat}}" ng-model="vm.scan.updated" is-open="vm.datePickerOpenStatus.updated"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('updated')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_success">Success</label>
+            <input type="checkbox" class="form-control" name="success" id="field_success"
+                    ng-model="vm.scan.success"
+                     />
+        </div>
+
+        <div class="form-group">
+            <label for="field_application">Application</label>
+            <select class="form-control" id="field_application" name="application" ng-model="vm.scan.application" ng-options="application as application.id for application in vm.applications track by application.id">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

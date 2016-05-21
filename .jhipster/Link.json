@@ -1,0 +1,33 @@
+{
+  "relationships": [
+    {
+      "relationshipId": 1,
+      "relationshipType": "many-to-one",
+      "relationshipName": "scan",
+      "otherEntityName": "scan",
+      "otherEntityField": "id"
+    }
+  ],
+  "fields": [
+    {
+      "fieldId": 1,
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldId": 2,
+      "fieldName": "postData",
+      "fieldType": "String"
+    },
+    {
+      "fieldId": 3,
+      "fieldName": "suspect",
+      "fieldType": "Boolean"
+    }
+  ],
+  "changelogDate": "20160521095031",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "link"
+}

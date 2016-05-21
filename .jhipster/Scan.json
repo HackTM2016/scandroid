@@ -1,0 +1,35 @@
+{
+  "relationships": [
+    {
+      "relationshipId": 1,
+      "relationshipType": "one-to-many",
+      "relationshipName": "link",
+      "otherEntityName": "link",
+      "otherEntityRelationshipName": "scan"
+    },
+    {
+      "relationshipId": 2,
+      "relationshipType": "many-to-one",
+      "relationshipName": "application",
+      "otherEntityName": "application",
+      "otherEntityField": "id"
+    }
+  ],
+  "fields": [
+    {
+      "fieldId": 1,
+      "fieldName": "updated",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldId": 2,
+      "fieldName": "success",
+      "fieldType": "Boolean"
+    }
+  ],
+  "changelogDate": "20160521095030",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "scan"
+}

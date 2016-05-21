@@ -1,0 +1,64 @@
+{
+  "relationships": [
+    {
+      "relationshipId": 1,
+      "relationshipType": "one-to-many",
+      "relationshipName": "scan",
+      "otherEntityName": "scan",
+      "otherEntityRelationshipName": "application"
+    }
+  ],
+  "fields": [
+    {
+      "fieldId": 1,
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldId": 2,
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldId": 3,
+      "fieldName": "packageName",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldId": 4,
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldId": 5,
+      "fieldName": "icon",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "image"
+    },
+    {
+      "fieldId": 6,
+      "fieldName": "apk",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "any"
+    },
+    {
+      "fieldId": 7,
+      "fieldName": "version",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20160521095029",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "entityTableName": "application"
+}

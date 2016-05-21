@@ -1,0 +1,76 @@
+<div>
+    <h2>Applications</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="application.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span >
+                        Create new Application
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span>ID</span></th>
+                    <th><span>Name</span></th>
+                    <th><span>Description</span></th>
+                    <th><span>Package Name</span></th>
+                    <th><span>Url</span></th>
+                    <th><span>Icon</span></th>
+                    <th><span>Apk</span></th>
+                    <th><span>Version</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="application in vm.applications track by application.id">
+                    <td><a ui-sref="application-detail({id:application.id})">{{application.id}}</a></td>
+                    <td>{{application.name}}</td>
+                    <td>{{application.description}}</td>
+                    <td>{{application.packageName}}</td>
+                    <td>{{application.url}}</td>
+                    <td>
+                        <a ng-if="application.icon" ng-click="vm.openFile(application.iconContentType, application.icon)">
+                            <img data-ng-src="{{'data:' + application.iconContentType + ';base64,' + application.icon}}" style="max-height: 30px;"/>
+                        </a>
+                        <span ng-if="application.icon">{{application.iconContentType}}, {{vm.byteSize(application.icon)}}</span>
+                    </td>
+                    <td>
+                        <a ng-if="application.apk" ng-click="vm.openFile(application.apkContentType, application.apk)">open</a>
+                        <span ng-if="application.apk">{{application.apkContentType}}, {{vm.byteSize(application.apk)}}</span>
+                    </td>
+                    <td>{{application.version}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="application-detail({id:application.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="application.edit({id:application.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="application.delete({id:application.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
