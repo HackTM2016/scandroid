@@ -18,10 +18,10 @@ spring:
         livereload:
             enabled: false
     datasource:
-        url: jdbc:mysql://localhost:3306/scandroid?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: url: jdbc:mysql://bancherulmeu.cayblqctpwlr.eu-central-1.rds.amazonaws.com:3306/scandroid_dbo
         name:
         username: root
-        password:
+        password: buni1989
         hikari:
             data-source-properties:
                 cachePrepStmts: true
