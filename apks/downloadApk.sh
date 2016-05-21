@@ -4,6 +4,7 @@
 # Accepts package name or Google Play URL as input.
 # Files are download from apk-dl.com
 # author : Arul (@arulrajnet)
+# mihai - heavily modified so it works.
 #
 
 #APK_DL_URL="http://apk-dl.com/store/apps/details?id=%s"
@@ -35,7 +36,7 @@ function download() {
         -H "User-Agent: $ua"
 
         local apk_url=`grep -o apk-dl.com/files/[a-zA-Z0-9.-/]* $PACKAGE_NAME.apk.details | tail -n 1`
-	echo $apk_url   
+	echo $apk_url
 
     curl "http://$apk_url" -o "$PACKAGE_NAME.apk.details2" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
         -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
@@ -44,7 +45,7 @@ function download() {
         -H "User-Agent: $ua"
 
 	local final_apk_url=`grep -o http://dl[a-zA-Z0-9\ -_]*apk? $PACKAGE_NAME.apk.details2 | tail -1`
-	echo $final_apk_url 
+	echo $final_apk_url
 
     curl "$final_apk_url" -o "$PACKAGE_NAME.apk" --write-out "%{http_code}" --compressed --retry 10 --retry-max-time 0 \
         -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" \
