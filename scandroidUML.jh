@@ -1,0 +1,29 @@
+entity Application{
+    name String required,
+    description String required,
+    packageName String required,
+    url String,
+    icon ImageBlob,
+    apk Blob,
+    version String
+}
+
+entity Scan{
+    updated LocalDate,
+    success Boolean
+}
+
+entity Link{
+    url String,
+    postData String,
+    suspect Boolean
+}
+
+relationship OneToMany{
+    Application{scan} to Scan{Application}
+}
+
+relationship OneToMany{
+    Scan{link} to Link{scan}
+}
+
