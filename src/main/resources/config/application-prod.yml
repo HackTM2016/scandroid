@@ -18,7 +18,7 @@ spring:
         livereload:
             enabled: false
     datasource:
-        url: url: jdbc:mysql://bancherulmeu.cayblqctpwlr.eu-central-1.rds.amazonaws.com:3306/scandroid_dbo
+        url: jdbc:mysql://bancherulmeu.cayblqctpwlr.eu-central-1.rds.amazonaws.com:3306/scandroid_dbo
         name:
         username: root
         password: buni1989
