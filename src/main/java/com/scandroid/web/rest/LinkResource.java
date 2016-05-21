@@ -1,12 +1,14 @@
 package com.scandroid.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.scandroid.domain.Application;
 import com.scandroid.domain.Link;
+import com.scandroid.domain.Scan;
+import com.scandroid.repository.ApplicationRepository;
 import com.scandroid.repository.LinkRepository;
 import com.scandroid.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * REST controller for managing Link.
@@ -26,10 +30,13 @@ import java.util.Optional;
 public class LinkResource {
 
     private final Logger log = LoggerFactory.getLogger(LinkResource.class);
-        
+
     @Inject
     private LinkRepository linkRepository;
-    
+
+    @Inject
+    private ApplicationRepository applicationRepository;
+
     /**
      * POST  /links : Create a new link.
      *
@@ -109,6 +116,34 @@ public class LinkResource {
                 result,
                 HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * GET  /links/:id : get the "id" link.
+     *
+     * @param packageName the packageName of an app to receive
+     * @return the ResponseEntity with status 200 (OK) and with body the link, or with status 404 (Not Found)
+     */
+    @RequestMapping(value = "/links/packageName/{packageName:.+}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public Set<Link> getLink(@PathVariable String packageName) {
+        log.debug("REST request to get Link for packageName: {}", packageName);
+        List<Application> applications = applicationRepository.findAllByApplicationName(packageName);
+        Set links = Collections.emptySet();
+        if(!applications.isEmpty()){
+            for(Application a : applications){
+                if(a.getScans().isEmpty()){
+
+                }else{
+                    for(Scan s : a.getScans()){
+                        return s.getLinks();
+                    }
+                }
+            }
+        }
+        return links;
     }
 
     /**
