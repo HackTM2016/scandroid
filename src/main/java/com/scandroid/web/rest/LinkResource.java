@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -131,17 +131,32 @@ public class LinkResource {
     public Set<Link> getLink(@PathVariable String packageName) {
         log.debug("REST request to get Link for packageName: {}", packageName);
         List<Application> applications = applicationRepository.findAllByApplicationName(packageName);
-        Set links = Collections.emptySet();
+        Set<Link> links = new HashSet<>(1);
         if(!applications.isEmpty()){
             for(Application a : applications){
                 if(a.getScans().isEmpty()){
-
+                    Link link = new Link();
+                    link.setId(-2L);
+                    link.setUrl("Application is not yet scanned, please return later");
+                    links.add(link);
                 }else{
                     for(Scan s : a.getScans()){
-                        return s.getLinks();
+                        if(s.isSuccess()) {
+                            return s.getLinks();
+                        }else{
+                            Link link = new Link();
+                            link.setId(-3L);
+                            link.setUrl("Application scan was not successful");
+                            links.add(link);
+                        }
                     }
                 }
             }
+        }else{
+            Link link = new Link();
+            link.setId(-1L);
+            link.setUrl("Application is submitted for review, please return later");
+            links.add(link);
         }
         return links;
     }
