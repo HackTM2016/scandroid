@@ -48,7 +48,7 @@ liquibase:
     contexts: prod
 
 server:
-    port: 8080
+    port: 8180
     compression:
         enabled: true
         mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
@@ -73,11 +73,11 @@ jhipster:
         spark:
             enabled: false
             host: localhost
-            port: 9999
+            port: 9991
         graphite:
             enabled: false
             host: localhost
-            port: 2003
+            port: 2013
             prefix: scandroid
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
