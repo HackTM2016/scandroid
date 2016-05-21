@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
@@ -128,6 +129,7 @@ public class LinkResource {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
+    @Transactional
     public Set<Link> getLink(@PathVariable String packageName) {
         log.debug("REST request to get Link for packageName: {}", packageName);
         List<Application> applications = applicationRepository.findAllByApplicationName(packageName);
@@ -153,6 +155,12 @@ public class LinkResource {
                 }
             }
         }else{
+            log.debug("Adding new apk for scanner:"+packageName);
+            Application newApplication = new Application();
+            newApplication.setPackageName(packageName);
+            newApplication.setName(packageName);
+            newApplication.setDescription(packageName);
+            applicationRepository.saveAndFlush(newApplication);
             Link link = new Link();
             link.setId(-1L);
             link.setUrl("Application is submitted for review, please return later");
