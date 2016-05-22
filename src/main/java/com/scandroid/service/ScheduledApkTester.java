@@ -46,7 +46,7 @@ public class ScheduledApkTester {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Scheduled(fixedRate = 100000)
+    @Scheduled(fixedRate = 10000)
     @Transactional
     public void  appsThatNeedScanning() {
         synchronized (lock) {
