@@ -62,9 +62,9 @@ public class ScheduledApkTester {
                     try {
                         log.debug("Scanning:" + a.getPackageName());
                         ProcessBuilder pb = new ProcessBuilder("/nas/web/hack/scandroid/apks/downloadApk.sh", a.getPackageName());
-                        //Process process = pb.start();
-                       // boolean succes = process.waitFor(120L, TimeUnit.SECONDS);
-                        boolean succes=true;
+                        Process process = pb.start();
+                        boolean succes = process.waitFor(120L, TimeUnit.SECONDS);
+                        //boolean succes=true;
                         log.debug("Command executed, any errors? " + (succes ? "No" : "Yes"));
                         if (!succes) {
                             log.error("Could not scan, setting error!");
@@ -74,6 +74,11 @@ public class ScheduledApkTester {
                             s.setUpdated(LocalDate.now());
                             scanRepository.saveAndFlush(s);
                         } else {
+
+                            PrintWriter writer = new PrintWriter(proxyOutputFilePath);
+                            writer.print("");
+                            writer.close();
+
                             //log.debug("Command Output:\n" + output(process.getInputStream()));
                             Scan s = new Scan();
 
@@ -85,7 +90,7 @@ public class ScheduledApkTester {
                             ProcessBuilder pb2 = new ProcessBuilder("/Applications/Genymotion.app/Contents/MacOS/tools/adb",
                                 "install", "/nas/web/hack/scandroid/apks/" + a.getPackageName() + ".apk");
 
-                            Process process = pb2.start();
+                            process = pb2.start();
                             succes = process.waitFor(120L, TimeUnit.SECONDS);
                             log.debug("Will sleep 20. Install command executed, any errors? " + (succes ? "No" : "Yes"));
 
