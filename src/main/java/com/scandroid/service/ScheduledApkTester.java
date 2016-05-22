@@ -35,50 +35,92 @@ public class ScheduledApkTester {
     @Inject
     private ScanRepository scanRepository;
 
+
+    private static final Object lock = new Object();
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 100000)
     @Transactional
-    public void appsThatNeedScanning() {
-        List<Application> applicationList = applicationRepository.findAllThatNeedScanning();
-        if(applicationList.isEmpty()){
-            return;
-        }
+    public void  appsThatNeedScanning() {
+        synchronized (lock) {
+            List<Application> applicationList = applicationRepository.findAllThatNeedScanning();
+            if (applicationList.isEmpty()) {
+                return;
+            }
 
-        log.debug("Apps that need scanning:");
-        for(Application a: applicationRepository.findAllThatNeedScanning()){
-            boolean scan = true;
-            if(a.getScans().isEmpty()){
-                try {
-                    log.debug("Scanning:"+a.getPackageName());
-                    ProcessBuilder pb = new ProcessBuilder("/nas/web/hack/scandroid/apks/downloadApk.sh", a.getPackageName());
-                    Process process = pb.start();
-                    boolean succes = process.waitFor(120L, TimeUnit.SECONDS);
-                    log.debug("Command executed, any errors? " + (succes ? "No" : "Yes"));
-                    if(!succes){
-                        log.error("Could not scan, setting error!");
-                        Scan s = new Scan();
-                        s.setApplication(a);
-                        s.setSuccess(false);
-                        s.setUpdated(LocalDate.now());
-                        scanRepository.saveAndFlush(s);
-                    }else {
-                        log.debug("Command Output:\n" + output(process.getInputStream()));
-                        Scan s = new Scan();
+            log.debug("Apps that need scanning:");
+            for (Application a : applicationRepository.findAllThatNeedScanning()) {
+                boolean scan = true;
+                if (a.getScans().isEmpty()) {
+                    try {
+                        log.debug("Scanning:" + a.getPackageName());
+                        ProcessBuilder pb = new ProcessBuilder("/nas/web/hack/scandroid/apks/downloadApk.sh", a.getPackageName());
+                        Process process = pb.start();
+                        boolean succes = process.waitFor(120L, TimeUnit.SECONDS);
+                        //boolean succes=true;
+                        log.debug("Command executed, any errors? " + (succes ? "No" : "Yes"));
+                        if (!succes) {
+                            log.error("Could not scan, setting error!");
+                            Scan s = new Scan();
+                            s.setApplication(a);
+                            s.setSuccess(false);
+                            s.setUpdated(LocalDate.now());
+                            scanRepository.saveAndFlush(s);
+                        } else {
+                            //log.debug("Command Output:\n" + output(process.getInputStream()));
+                            Scan s = new Scan();
+
+                            //send the apk to adb
+
+                            String command = "/Applications/Genymotion.app/Contents/MacOS/tools/adb " +
+                                "install /nas/web/hack/scandroid/apks/" + a.getPackageName() + ".apk";
+                            log.debug("Install command: " + command);
+                            ProcessBuilder pb2 = new ProcessBuilder("/Applications/Genymotion.app/Contents/MacOS/tools/adb",
+                                "install", "/nas/web/hack/scandroid/apks/" + a.getPackageName() + ".apk");
+
+                            process = pb2.start();
+                            succes = process.waitFor(120L, TimeUnit.SECONDS);
+                            log.debug("Will sleep 20. Install command executed, any errors? " + (succes ? "No" : "Yes"));
+
+                            Thread.sleep(10000);
+
+                            String command2 = "/Applications/Genymotion.app/Contents/MacOS/tools/adb" +
+                                " shell  monkey -p " + a.getPackageName() + " -v 500";
+
+                            log.debug("Run command:" + command2);
+                            ProcessBuilder pb3 = new ProcessBuilder("/Applications/Genymotion.app/Contents/MacOS/tools/adb",
+                                "shell", "monkey", "-p", a.getPackageName(), "-v", "500");
+
+
+                            process = pb3.start();
+                            succes = process.waitFor(200L, TimeUnit.SECONDS);
+                            log.debug("Will sleep 60s. Monkey test command executed, any errors? " + (succes ? "No" : "Yes"));
+                            Thread.sleep(10000);
+
+                            String command3 = "/Applications/Genymotion.app/Contents/MacOS/tools/adb uninstall " + a.getPackageName();
+                            ProcessBuilder pb4 = new ProcessBuilder("/Applications/Genymotion.app/Contents/MacOS/tools/adb", "uninstall", a.getPackageName());
+
+                            process = pb4.start();
+                            succes = process.waitFor(120L, TimeUnit.SECONDS);
+                            log.debug("Uninstall command executed, any errors? " + (succes ? "No" : "Yes"));
+
+
                         s.setApplication(a);
                         s.setSuccess(true);
                         s.setUpdated(LocalDate.now());
                         scanRepository.saveAndFlush(s);
+                        }
+                    } catch (IOException e) {
+                        log.error("IOException:" + e.toString());
+                    } catch (InterruptedException e) {
+                        log.error("Interrupted Exception:" + e.toString());
                     }
-                } catch (IOException e) {
-                    log.error("IOException:"+e.toString());
-                } catch (InterruptedException e) {
-                    log.error("Interrupted Exception:"+e.toString());
                 }
             }
         }
-
     }
+
 
     private String output(InputStream inputStream) throws IOException {
         StringBuilder sb = new StringBuilder();

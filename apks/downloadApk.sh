@@ -4,7 +4,7 @@
 # Accepts package name or Google Play URL as input.
 # Files are download from apk-dl.com
 # author : Arul (@arulrajnet)
-# mihai - heavily modified so it works.
+# mihai - heavily modified so it now works
 #
 
 #APK_DL_URL="http://apk-dl.com/store/apps/details?id=%s"
